@@ -1,0 +1,671 @@
+{
+  "id": "00000000-0000-0000-0000-000000000000",
+  "revision": 0,
+  "last_node_id": 21,
+  "last_link_id": 25,
+  "nodes": [
+    {
+      "id": 3,
+      "type": "UnetLoaderGGUF",
+      "pos": [
+        530.0751904987869,
+        -31.75686681640252
+      ],
+      "size": [
+        324,
+        82.66666412353516
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 2,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            24
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "UnetLoaderGGUF"
+      },
+      "widgets_values": [
+        "flux1-dev-Q4_K_S.gguf"
+      ]
+    },
+    {
+      "id": 13,
+      "type": "DualCLIPLoader",
+      "pos": [
+        20.46353614087684,
+        449.17780969726925
+      ],
+      "size": [
+        324,
+        186.6666717529297
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 2,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            3,
+            4
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "DualCLIPLoader"
+      },
+      "widgets_values": [
+        "t5xxl_fp8_e4m3fn(Text Encoder 1).safetensors",
+        "clip_l(Text Encoder 2).safetensors",
+        "flux",
+        "default"
+      ]
+    },
+    {
+      "id": 5,
+      "type": "CLIPTextEncode",
+      "pos": [
+        446.14152137036893,
+        112.93897882568729
+      ],
+      "size": [
+        480,
+        121.5
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 2,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 3
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            5
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        ""
+      ]
+    },
+    {
+      "id": 7,
+      "type": "CLIPTextEncode",
+      "pos": [
+        444.669344856697,
+        729.9986553393591
+      ],
+      "size": [
+        480,
+        121.5
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 2,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 4
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            6
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        ""
+      ]
+    },
+    {
+      "id": 17,
+      "type": "LoadImage",
+      "pos": [
+        -393.5783168864667,
+        987.8093207751499
+      ],
+      "size": [
+        593.5,
+        719.5
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 2,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            18,
+            22
+          ]
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "example.png",
+        "image"
+      ]
+    },
+    {
+      "id": 20,
+      "type": "Florence2Run",
+      "pos": [
+        571.9008559345779,
+        1746.8826479541049
+      ],
+      "size": [
+        480,
+        444.1666564941406
+      ],
+      "flags": {},
+      "order": 8,
+      "mode": 2,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 22
+        },
+        {
+          "name": "florence2_model",
+          "type": "FL2MODEL",
+          "link": 21
+        }
+      ],
+      "outputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "links": null
+        },
+        {
+          "name": "mask",
+          "type": "MASK",
+          "links": [
+            23
+          ]
+        },
+        {
+          "name": "caption",
+          "type": "STRING",
+          "links": null
+        },
+        {
+          "name": "data",
+          "type": "JSON",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Florence2Run"
+      },
+      "widgets_values": [
+        "",
+        "referring_expression_segmentation",
+        true,
+        false,
+        1024,
+        3,
+        true,
+        "",
+        1,
+        "randomize"
+      ]
+    },
+    {
+      "id": 19,
+      "type": "Florence2ModelLoader",
+      "pos": [
+        -136.4129934001387,
+        1999.853294926761
+      ],
+      "size": [
+        354.6000061035156,
+        180
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 2,
+      "inputs": [
+        {
+          "name": "lora",
+          "shape": 7,
+          "type": "PEFTLORA",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "florence2_model",
+          "type": "FL2MODEL",
+          "links": [
+            21
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Florence2ModelLoader"
+      },
+      "widgets_values": [
+        "Florence-2-base-ft",
+        "fp16",
+        "sdpa",
+        false
+      ]
+    },
+    {
+      "id": 18,
+      "type": "VAEEncodeForInpaint",
+      "pos": [
+        1299.4536978840406,
+        1340.786478825687
+      ],
+      "size": [
+        338.4166564941406,
+        128
+      ],
+      "flags": {},
+      "order": 9,
+      "mode": 2,
+      "inputs": [
+        {
+          "name": "pixels",
+          "type": "IMAGE",
+          "link": 18
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 20
+        },
+        {
+          "name": "mask",
+          "type": "MASK",
+          "link": 23
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            17
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAEEncodeForInpaint"
+      },
+      "widgets_values": [
+        6
+      ]
+    },
+    {
+      "id": 4,
+      "type": "VAELoader",
+      "pos": [
+        996.2680139851149,
+        826.133151646732
+      ],
+      "size": [
+        324,
+        82.66666412353516
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 2,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            2,
+            20
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAELoader"
+      },
+      "widgets_values": [
+        "ae((black-forest-labs)FLUX1-schnell).safetensors"
+      ]
+    },
+    {
+      "id": 21,
+      "type": "LoraLoaderModelOnly",
+      "pos": [
+        1294.996844856697,
+        -128.31485204589467
+      ],
+      "size": [
+        324,
+        114.66667175292969
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 2,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 24
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            25
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoraLoaderModelOnly"
+      },
+      "widgets_values": [
+        "PUT_YOUR_LORA_HERE.safetensors",
+        1
+      ]
+    },
+    {
+      "id": 9,
+      "type": "KSampler",
+      "pos": [
+        1979.2720065998606,
+        1.6795009814491095
+      ],
+      "size": [
+        392.3999938964844,
+        317.3333435058594
+      ],
+      "flags": {},
+      "order": 10,
+      "mode": 2,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 25
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 5
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 6
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 17
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            8
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "KSampler"
+      },
+      "widgets_values": [
+        0,
+        "randomize",
+        20,
+        1,
+        "euler",
+        "simple",
+        1
+      ]
+    },
+    {
+      "id": 10,
+      "type": "VAEDecode",
+      "pos": [
+        2194.0672421955637,
+        530.2276479541051
+      ],
+      "size": [
+        225,
+        72
+      ],
+      "flags": {},
+      "order": 11,
+      "mode": 2,
+      "inputs": [
+        {
+          "name": "samples",
+          "type": "LATENT",
+          "link": 8
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 2
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            15
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAEDecode"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 11,
+      "type": "SaveImage",
+      "pos": [
+        2447.1991831135324,
+        284.0732949267615
+      ],
+      "size": [
+        655.25,
+        650.4166870117188
+      ],
+      "flags": {},
+      "order": 12,
+      "mode": 2,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 15
+        }
+      ],
+      "outputs": [],
+      "properties": {},
+      "widgets_values": [
+        "ComfyUI"
+      ]
+    }
+  ],
+  "links": [
+    [
+      2,
+      4,
+      0,
+      10,
+      1,
+      "VAE"
+    ],
+    [
+      3,
+      13,
+      0,
+      5,
+      0,
+      "CLIP"
+    ],
+    [
+      4,
+      13,
+      0,
+      7,
+      0,
+      "CLIP"
+    ],
+    [
+      5,
+      5,
+      0,
+      9,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      6,
+      7,
+      0,
+      9,
+      2,
+      "CONDITIONING"
+    ],
+    [
+      8,
+      9,
+      0,
+      10,
+      0,
+      "LATENT"
+    ],
+    [
+      15,
+      10,
+      0,
+      11,
+      0,
+      "IMAGE"
+    ],
+    [
+      17,
+      18,
+      0,
+      9,
+      3,
+      "LATENT"
+    ],
+    [
+      18,
+      17,
+      0,
+      18,
+      0,
+      "IMAGE"
+    ],
+    [
+      20,
+      4,
+      0,
+      18,
+      1,
+      "VAE"
+    ],
+    [
+      21,
+      19,
+      0,
+      20,
+      1,
+      "FL2MODEL"
+    ],
+    [
+      22,
+      17,
+      0,
+      20,
+      0,
+      "IMAGE"
+    ],
+    [
+      23,
+      20,
+      1,
+      18,
+      2,
+      "MASK"
+    ],
+    [
+      24,
+      3,
+      0,
+      21,
+      0,
+      "MODEL"
+    ],
+    [
+      25,
+      21,
+      0,
+      9,
+      0,
+      "MODEL"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.6209213230591555,
+      "offset": [
+        102.26714283036638,
+        706.2929099984938
+      ]
+    },
+    "workflowRendererVersion": "Vue",
+    "frontendVersion": "1.37.11"
+  },
+  "version": 0.4
+}
